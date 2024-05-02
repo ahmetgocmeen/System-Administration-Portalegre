@@ -14,6 +14,32 @@ displayCustomer() {
 	echo "Status: $6"
 }
 
+insertNewCustomer() {
+	echo "Enter VAT Number: "
+	read numberVat
+	
+	isExisting=$(grep -i  ";$numberVat;" "$clients")
+	if [[ $isExisting  ]]; then
+		echo "The Customer already exists!"
+		read id name address email vatNumber status <<< "$isExisting"
+		displayCustomer $id $name $address $email $vatNumber $status
+		if [[ $status == "I"  ]]; then
+			echo "Do you want to activate customer? (y/n)"
+			read reply
+			if [[ $reply=="yes" || $reply=="y" ]]; then
+				sed -i "s/$isExisting/$(echo $isExistingr | sed 's/;I$/;A/')" "$clients"
+                		echo "Customer Activated!"
+			fi
+		fi
+	else
+		echo "Enter Customer Name: "
+		echo "Enter Address: "
+		echo "Enter Mail: "
+		id=$(tail -n 1 "$clients")
+		echo "$id"
+	fi
+}
+
 listAllCustomers() {
 	echo "List of All Customers:"
 	while read id name address email vatNumber status
@@ -38,6 +64,7 @@ while true; do
  case $option in
 	1)
 	    clear
+	    insertNewCustomer
 	    ;;
 	2)
 	    clear
