@@ -33,10 +33,15 @@ insertNewCustomer() {
 		fi
 	else
 		echo "Enter Customer Name: "
+		read name
 		echo "Enter Address: "
+		read address
 		echo "Enter Mail: "
-		id=$(tail -n 1 "$clients")
-		echo "$id"
+		read mail
+		id=$(sed -n '$p' "$clients" | cut -c1)
+		((id+=1))
+		echo -e "$id;$name;$address;$mail;$numberVat;A" >> clients.csv
+		echo "Customer Registered."
 	fi
 }
 
