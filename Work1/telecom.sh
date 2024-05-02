@@ -1,7 +1,7 @@
 #!/bin/bash
 
 clients=clients.csv
-calls="calls.csv"
+calls=calls.csv
 OLDIFS=$IFS
 IFS=';'
 
