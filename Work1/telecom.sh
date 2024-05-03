@@ -1,5 +1,6 @@
 #!/bin/bash
 
+clie="clients.csv"
 clients=clients.csv
 calls=calls.csv
 OLDIFS=$IFS
@@ -18,7 +19,7 @@ insertNewCustomer() {
 	echo "Enter VAT Number: "
 	read numberVat
 	
-	isExisting=$(grep -i  ";$numberVat;" "$clients")
+	isExisting=$(grep  ";$numberVat;" "$clients")
 	if [[ $isExisting  ]]; then
 		echo "The Customer already exists!"
 		read id name address email vatNumber status <<< "$isExisting"
@@ -27,7 +28,7 @@ insertNewCustomer() {
 			echo "Do you want to activate customer? (y/n)"
 			read reply
 			if [[ $reply=="yes" || $reply=="y" ]]; then
-				sed -i "s/$isExisting/$(echo $isExistingr | sed 's/;I$/;A/')" "$clients"
+				sed -i.bak "${id}s/;I/;A/" clients.csv
                 		echo "Customer Activated!"
 			fi
 		fi
@@ -54,6 +55,18 @@ listAllCustomers() {
             displayCustomer $id $name $address $email $vatNumber $status
 	    echo "-------------------------------"
 	done < "$clients"
+}
+
+inactivateCustomer() {
+	echo "Enter ID of Customer: "
+	read id
+	getCustomer=$(grep "$id;" "$clients")
+	if [[ $getCustomer  ]]; then
+		sed -i.bak "${id}s/;A/;I/" clients.csv
+        	echo "Customer Inactivated!"
+	else 
+		echo "Customer not found!"
+	fi
 }
 
 while true; do
@@ -83,6 +96,7 @@ while true; do
 	    ;;
 	5)
 	    clear
+	    inactivateCustomer
 	    ;;
 	6)
 	    echo "Exiting."
