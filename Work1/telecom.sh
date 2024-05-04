@@ -57,6 +57,38 @@ listAllCustomers() {
 	done < "$clients"
 }
 
+report() {
+	echo "1) Report By Customer"
+	echo "2) Report By Calls Date"
+	echo "3) Back to Main Menu"
+	read -p "Choose an option: " reportOption
+	
+	case $reportOption in
+		1)
+		    ;;
+		2)
+		    echo "Enter Date (DD-MM-YYYY):"
+		    read reportDate
+		    echo "Calls at $reportDate:"
+		    while read id number date duration
+		    do
+			if [[ $date == $reportDate  ]]; then
+			    customer_info=$(grep "^$id;" clients.csv)
+                    	    name=$(echo $customer_info | cut -d ';' -f 2)
+                            echo "$name - $number - $duration minutes"
+			fi
+		    done < "$calls"
+		    ;;
+		3)
+		    return
+		    ;;
+		4)
+		    echo "Invalid option!"
+		    ;;
+	esac
+}	
+
+
 inactivateCustomer() {
 	echo "Enter ID of Customer: "
 	read id
@@ -93,6 +125,7 @@ while true; do
 	    ;;
         4)
 	    clear
+	    report
 	    ;;
 	5)
 	    clear
