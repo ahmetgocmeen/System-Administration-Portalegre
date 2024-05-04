@@ -77,7 +77,7 @@ report() {
 		    do
 			if [[ $date == $reportDate  ]]; then
 			    customerInfo=$(grep "^$id;" clients.csv)
-                    	    name=$(echo $customerInfo | cut -d ';' -f 2)
+                    	    name=$(awk -F';' -v id="$id" '$1 == id {print $2}' clients.csv)
                             echo "$name - $number - $duration minutes"
 			    ((totalCalls+=1))
 			    ((totalMinutes+=$duration))
