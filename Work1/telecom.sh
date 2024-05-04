@@ -67,17 +67,24 @@ report() {
 		1)
 		    ;;
 		2)
+		    totalMinutes=0
+		    totalCalls=0
 		    echo "Enter Date (DD-MM-YYYY):"
 		    read reportDate
 		    echo "Calls at $reportDate:"
+		    echo "------------------------------------"
 		    while read id number date duration
 		    do
 			if [[ $date == $reportDate  ]]; then
-			    customer_info=$(grep "^$id;" clients.csv)
-                    	    name=$(echo $customer_info | cut -d ';' -f 2)
+			    customerInfo=$(grep "^$id;" clients.csv)
+                    	    name=$(echo $customerInfo | cut -d ';' -f 2)
                             echo "$name - $number - $duration minutes"
+			    ((totalCalls+=1))
+			    ((totalMinutes+=$duration))
 			fi
 		    done < "$calls"
+		    echo "Total Calls > $totalCalls"
+		    echo "Total Minutes > $totalMinutes"
 		    ;;
 		3)
 		    return
