@@ -67,10 +67,12 @@ report() {
 		1)
 		    ;;
 		2)
+		    clear
 		    totalMinutes=0
 		    totalCalls=0
 		    echo "Enter Date (DD-MM-YYYY):"
 		    read reportDate
+		    echo ""
 		    echo "Calls at $reportDate:"
 		    echo "------------------------------------"
 		    while read id number date duration
@@ -83,6 +85,7 @@ report() {
 			    ((totalMinutes+=$duration))
 			fi
 		    done < "$calls"
+		    echo ""
 		    echo "Total Calls > $totalCalls"
 		    echo "Total Minutes > $totalMinutes"
 		    ;;
