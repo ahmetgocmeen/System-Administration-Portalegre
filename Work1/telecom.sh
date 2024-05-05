@@ -57,6 +57,44 @@ listAllCustomers() {
 	done < "$clients"
 }
 
+billing() {
+	echo "Enter Customer ID: "
+	read customerID
+	clear
+	getCustomer=$(grep  "$customerID;" "$clients")
+	if [[ $getCustomer  ]]; then
+		totalMinutes=0
+		totalCalls=0
+		echo "Invoice"
+		echo "==================="
+		read idCust name address email vat status <<< "$getCustomer"
+	   	echo "ID Number: $idCust"
+	   	echo "Name: $name"
+	   	echo "Address: $address"
+	   	echo "Email: $email"
+	   	echo "VAT: $vat"
+		echo ""
+		echo "Calls"
+		echo "-----------------------------"
+		while read id number date duration
+		do
+			if [[ $id == $customerID ]]; then
+				echo "$date - $number - $duration minutes"
+				((totalMinutes+=$duration))
+				((totalCalls+=1))
+			fi
+		done < "$calls"
+		echo ""
+		echo "Total Calls > $totalCalls"
+		echo "Total Minutes > $totalMinutes"
+		echo "Amount payable > $(echo "scale=2; $totalMinutes * 0.05" | bc) Euros"
+	else
+		echo "Invalid ID Number!"
+		return
+	fi
+}
+
+
 report() {
 	echo "1) Report By Customer"
 	echo "2) Report By Calls Date"
@@ -65,6 +103,7 @@ report() {
 	
 	case $reportOption in
 		1)
+		    billing
 		    ;;
 		2)
 		    clear
@@ -88,6 +127,7 @@ report() {
 		    echo ""
 		    echo "Total Calls > $totalCalls"
 		    echo "Total Minutes > $totalMinutes"
+		    echo ""
 		    ;;
 		3)
 		    return
@@ -132,6 +172,7 @@ while true; do
             ;;
 	3)  
 	    clear
+	    billing
 	    ;;
         4)
 	    clear
